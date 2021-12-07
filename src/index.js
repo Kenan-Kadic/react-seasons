@@ -1,39 +1,35 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 
 if (module.hot) {
     module.hot.accept();
   }
 
 class App extends React.Component {
-    constructor(props) {
-        super(props); //makes sure that the constroctors inside of React.Component (the parent) get called
+    state = { lat: null, errorMessage: '' };
 
-        // this is the only time we do direct assignment to the state property
-        this.state = { lat: null, errorMessage: '' };
+    componentDidMount() {
+    window.navigator.geolocation.getCurrentPosition(
+        position => this.setState({lat: position.coords.latitude}),
+        
+        (err) => this.setState({ errorMessage: err.message }) 
+    );
+}   
+ 
+render() {
+    // render just returns some JSX--that is it
 
-        window.navigator.geolocation.getCurrentPosition(
-            position => {
-            // called setState
-            this.setState({lat: position.coords.latitude})
-            },
-            (err) => {
-                this.setState({ errorMessage: err.message });
-            }
-        );
+    if (this.state.errorMessage && !this.state.lat){
+        return <div>Error: {this.state.errorMessage}</div>
     }
 
-    render() {
-        if (this.state.errorMessage && !this.state.lat){
-            return <div>Error: {this.state.errorMessage}</div>
-        }
+    if (!this.state.errorMessage && this.state.lat){
+        return <div> <SeasonDisplay lat={this.state.lat}/></div>
+    }
 
-        if (!this.state.errorMessage && this.state.lat){
-            return <div>Latitude: {this.state.lat}</div>
-        }
-
-        return <div>Loading!</div>                    
-        }
+    return <div>Loading!</div>                    
+    }
 }
 
 ReactDOM.render (
