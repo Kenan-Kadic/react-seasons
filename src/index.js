@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import SeasonDisplay from "./SeasonDisplay";
+import Spinner from "./Spinner";
 
 if (module.hot) {
   module.hot.accept();
@@ -17,7 +18,7 @@ class App extends React.Component {
   }
 
   // React says we have to define render!!
-  render() {
+  render(props) {
     if (this.state.errorMessage && !this.state.lat) {
       return <div>Error: {this.state.errorMessage}</div>;
     }
@@ -26,7 +27,7 @@ class App extends React.Component {
       return <SeasonDisplay lat={this.state.lat} />;
     }
 
-    return <div>Loading!</div>;
+    return <div><Spinner message="Waiting on location approval..."/></div>;
   }
 }
 
